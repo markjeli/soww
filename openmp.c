@@ -57,7 +57,14 @@ int main(int argc, char **argv)
 #pragma omp parallel for reduction(+ : count)
   for (int i = 0; i < ins__args.n_thr; i++)
   {
-    count += CheckHowManyPrimes(numbers + i * dataChunk, dataChunk);
+    if (i == ins__args.n_thr - 1)
+    {
+      count += CheckHowManyPrimes(&numbers[i * dataChunk], inputArgument - i * dataChunk);
+    }
+    else
+    {
+      count += CheckHowManyPrimes(&numbers[i * dataChunk], dataChunk);
+    }
   }
 
   printf("Number of primes: %lu\n", count);
