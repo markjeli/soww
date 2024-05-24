@@ -4,6 +4,7 @@
 #include <cuda_runtime.h>
 #include <sys/time.h>
 #include "numgen.c"
+#include <math.h>
 
 __device__
 unsigned long isPrime(unsigned long n)
