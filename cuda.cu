@@ -4,7 +4,6 @@
 #include <cuda_runtime.h>
 #include <sys/time.h>
 #include "numgen.c"
-#include <math.h>
 
 __device__
 unsigned long isPrime(unsigned long n)
@@ -14,7 +13,7 @@ unsigned long isPrime(unsigned long n)
     return 0;
 
   // Check from 2 to n-1
-  for (int i = 2; i <= sqrt(n); i++)
+  for (int i = 2; i <= sqrtf(static_cast<float>(n)); i++)
     if (n % i == 0)
       return 0;
 
@@ -65,7 +64,7 @@ int main(int argc, char **argv)
   CheckHowManyPrimes<<<gridSize, blockSize>>>(d_numbers, d_primes, inputArgument);
 
   cudaMemcpy(&primes, d_primes, sizeof(unsigned long long), cudaMemcpyDeviceToHost);
-  printf("Number of primes: %ld\n", primes);
+  printf("Number of primes: %lld\n", primes);
 
   cudaFree(d_numbers);
   cudaFree(d_primes);
