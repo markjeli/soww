@@ -22,7 +22,7 @@ unsigned long isPrime(unsigned long n)
 }
 
 __global__
-void CheckHowManyPrimes(unsigned long numbers[], unsigned long *primes, long size)
+void CheckHowManyPrimes(unsigned long numbers[], unsigned long long *primes, long size)
 {
   int index = blockIdx.x * blockDim.x + threadIdx.x;
   if (index < size)
@@ -50,21 +50,21 @@ int main(int argc, char **argv)
 
   // run your CUDA kernel(s) here
   unsigned long *d_numbers;
-  unsigned long *d_primes;
-  unsigned long primes = 0;
+  unsigned long long *d_primes;
+  unsigned long long primes = 0;
 
   cudaMalloc(&d_numbers, inputArgument * sizeof(unsigned long));
-  cudaMalloc(&d_primes, sizeof(unsigned long));
+  cudaMalloc(&d_primes, sizeof(unsigned long long));
 
   cudaMemcpy(d_numbers, numbers, inputArgument * sizeof(unsigned long), cudaMemcpyHostToDevice);
-  cudaMemcpy(d_primes, &primes, sizeof(unsigned long), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_primes, &primes, sizeof(unsigned long long), cudaMemcpyHostToDevice);
 
   int blockSize = 256;
   int gridSize = (inputArgument + blockSize - 1) / blockSize;
 
   CheckHowManyPrimes<<<gridSize, blockSize>>>(d_numbers, d_primes, inputArgument);
 
-  cudaMemcpy(&primes, d_primes, sizeof(unsigned long), cudaMemcpyDeviceToHost);
+  cudaMemcpy(&primes, d_primes, sizeof(unsigned long long), cudaMemcpyDeviceToHost);
   printf("Number of primes: %ld\n", primes);
 
   cudaFree(d_numbers);
